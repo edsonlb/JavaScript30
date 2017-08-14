@@ -58,13 +58,34 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
-  window.addEventListener('keydown', function (e) {
-    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
-    if (!audio) 
-      return; // Parar se não tiver nenhuma tecla mapeada...
 
+  function removerTransision(e){
+    if (e.propertyName !== 'transform') 
+      return;
+
+    this.classList.remove('playing');
+  }
+
+  function tocaSom(e) {
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+
+    if (!audio) {
+      console.log(`Tecla ${e.keyCode} não mapeada...`);
+      return; // Parar se não tiver nenhuma tecla mapeada...
+    }
+
+    console.log(`TOCANDO ${e.keyCode}...`);
+    audio.currentTime = 0;    
     audio.play();
-  });
+
+    key.classList.add('playing');
+  }
+
+  const keys = document.querySelectorAll('.key');
+
+  keys.forEach(key => key.addEventListener('transitionend', removerTransision));
+  window.addEventListener('keydown', tocaSom );
 
 </script>
 
